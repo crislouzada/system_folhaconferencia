@@ -357,6 +357,9 @@ def structure_payroll_data(raw_data: List[List[str]]) -> Dict[str, Any]:
             reference = str(row[col_indices.get('reference', 2)]).strip() if col_indices.get('reference', 2) < len(row) else ''
             calculated_raw = row[col_indices.get('calculated', 3)] if col_indices.get('calculated', 3) < len(row) else 0
             informed_raw = row[col_indices.get('informed', 4)] if col_indices.get('informed', 4) < len(row) else 0
+            tipo_raw = None
+            if 'type' in col_indices and col_indices['type'] < len(row):
+                tipo_raw = row[col_indices['type']]
             
             # Validar dados essenciais
             if not code or not reference:
@@ -373,6 +376,16 @@ def structure_payroll_data(raw_data: List[List[str]]) -> Dict[str, Any]:
             # Converter valores com função robusta
             calculated = parse_decimal_value(calculated_raw)
             informed = parse_decimal_value(informed_raw)
+
+            # Aplicar regra de sinal baseada no TIPO: 'P' = positivo; diferente de 'P' = negativo
+            tipo_flag = None
+            if tipo_raw is not None:
+                tipo_flag = str(tipo_raw).strip().upper()[:1]
+                # Apenas aplica para valores monetários; horas e percentuais mantêm sinal
+                if detect_value_type(calculated_raw) == 'currency':
+                    calculated = calculated if tipo_flag == 'P' else -abs(calculated)
+                if detect_value_type(informed_raw) == 'currency':
+                    informed = informed if tipo_flag == 'P' else -abs(informed)
             
             # Adicionar referência aos sets
             all_references.add(reference)
@@ -439,7 +452,8 @@ def detect_column_indices(headers: List[str]) -> Dict[str, int]:
         'description': ['nome', 'descrição', 'descricao', 'historico', 'descrição do evento'],
         'reference': ['referencia', 'referência', 'ref', 'competencia', 'competência'],
         'calculated': ['calculado', 'valor calculado', 'calc', 'vlr calc'],
-        'informed': ['informado', 'valor informado', 'inf', 'vlr inf']
+        'informed': ['informado', 'valor informado', 'inf', 'vlr inf'],
+        'type': ['tipo', 'tp', 'p/d', 'pd', 'natureza']
     }
     
     for col_idx, header in enumerate(headers):
@@ -462,6 +476,7 @@ def detect_column_indices(headers: List[str]) -> Dict[str, int]:
         col_map['calculated'] = 20  # Mudou de 3 para 20
     if 'informed' not in col_map:
         col_map['informed'] = 23  # Mudou de 4 para 23
+    # 'type' é opcional; não define padrão se não detectado
     
     return col_map
 
