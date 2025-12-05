@@ -27,6 +27,7 @@ import traceback
 from typing import Dict, List, Any, Optional
 from decimal import Decimal, InvalidOperation
 
+APP_VERSION = os.getenv('APP_VERSION', '3.0.1-functional')
 app = Flask(__name__)
 CORS(app)
 
@@ -573,7 +574,7 @@ def ajuda():
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({'status': 'healthy', 'version': '3.0-payroll'}), 200
+    return jsonify({'status': 'healthy', 'version': APP_VERSION}), 200
 
 
 @app.route('/parse-excel', methods=['POST'])
@@ -750,6 +751,7 @@ if __name__ == '__main__':
     print('✓ Estruturação transposta para comparativo')
     print('✓ Detecção automática de referências')
     print('=' * 80)
+    print(f'🌐 Versão: {APP_VERSION}')
     print(f'🌐 Servidor: http://localhost:5001')
     print(f'📡 Endpoint: POST /parse-excel')
     print('=' * 80 + '\n')
