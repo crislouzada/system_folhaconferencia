@@ -377,15 +377,17 @@ def structure_payroll_data(raw_data: List[List[str]]) -> Dict[str, Any]:
             calculated = parse_decimal_value(calculated_raw)
             informed = parse_decimal_value(informed_raw)
 
-            # Aplicar regra de sinal baseada no TIPO: 'P' = positivo; diferente de 'P' = negativo
-            tipo_flag = None
+            # Aplicar regra de sinal baseada no TIPO em ambos os campos:
+            # 'P' (ou 'p') = positivo; diferente de 'P' = negativo
             if tipo_raw is not None:
                 tipo_flag = str(tipo_raw).strip().upper()[:1]
-                # Apenas aplica para valores monetários; horas e percentuais mantêm sinal
-                if detect_value_type(calculated_raw) == 'currency':
-                    calculated = calculated if tipo_flag == 'P' else -abs(calculated)
-                if detect_value_type(informed_raw) == 'currency':
-                    informed = informed if tipo_flag == 'P' else -abs(informed)
+                sign = 1 if tipo_flag == 'P' else -1
+                calculated = abs(calculated) * sign
+                informed = abs(informed) * sign
+
+            # Padronizar para 2 casas decimais
+            calculated = round(calculated, 2)
+            informed = round(informed, 2)
             
             # Adicionar referência aos sets
             all_references.add(reference)
@@ -402,7 +404,7 @@ def structure_payroll_data(raw_data: List[List[str]]) -> Dict[str, Any]:
             current_employee['events_map'][event_key][reference] = {
                 'calculated': calculated,
                 'informed': informed,
-                'difference': calculated - informed
+                'difference': round(calculated - informed, 2)
             }
             
             event_count += 1
@@ -524,12 +526,17 @@ def calculate_employee_totals(events: List[Dict], references: List[str]) -> Dict
     totals = {}
     
     for ref in references:
+        calc_sum = sum(e['values'][ref]['calculated'] for e in events)
+        info_sum = sum(e['values'][ref]['informed'] for e in events)
+        calc_sum = round(calc_sum, 2)
+        info_sum = round(info_sum, 2)
+        diff_sum = round(calc_sum - info_sum, 2)
+
         totals[ref] = {
-            'calculated': sum(e['values'][ref]['calculated'] for e in events),
-            'informed': sum(e['values'][ref]['informed'] for e in events),
-            'difference': 0.0
+            'calculated': calc_sum,
+            'informed': info_sum,
+            'difference': diff_sum
         }
-        totals[ref]['difference'] = totals[ref]['calculated'] - totals[ref]['informed']
     
     return totals
 
@@ -546,15 +553,17 @@ def calculate_global_summary(employees: List[Dict], references: List[str]) -> Di
     }
     
     for ref in references:
+        total_calc = sum(emp['totals'][ref]['calculated'] for emp in employees if ref in emp['totals'])
+        total_info = sum(emp['totals'][ref]['informed'] for emp in employees if ref in emp['totals'])
+        total_calc = round(total_calc, 2)
+        total_info = round(total_info, 2)
+        total_diff = round(total_calc - total_info, 2)
+
         summary['by_reference'][ref] = {
-            'total_calculated': sum(emp['totals'][ref]['calculated'] for emp in employees if ref in emp['totals']),
-            'total_informed': sum(emp['totals'][ref]['informed'] for emp in employees if ref in emp['totals']),
-            'total_difference': 0.0
+            'total_calculated': total_calc,
+            'total_informed': total_info,
+            'total_difference': total_diff
         }
-        summary['by_reference'][ref]['total_difference'] = (
-            summary['by_reference'][ref]['total_calculated'] - 
-            summary['by_reference'][ref]['total_informed']
-        )
     
     return summary
 
