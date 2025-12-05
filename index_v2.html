@@ -56,6 +56,7 @@
             border-radius: 12px;
             box-shadow: var(--shadow);
             margin-bottom: 30px;
+            position: relative;
         }
 
         .header h1 {
@@ -67,6 +68,54 @@
         .header .subtitle {
             color: var(--text-secondary);
             font-size: 14px;
+        }
+
+        .help-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .help-button:active {
+            transform: scale(0.95);
+        }
+
+        .help-tooltip {
+            position: absolute;
+            top: 75px;
+            right: 30px;
+            background: #2D3748;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .help-button:hover + .help-tooltip {
+            opacity: 1;
         }
 
         .upload-section {
@@ -588,6 +637,10 @@
         <header class="header">
             <h1>📊 Sistema de Conferência de Folha</h1>
             <p class="subtitle">Análise detalhada de eventos por funcionário e referência</p>
+            <button class="help-button" onclick="window.open('ajuda.html', '_blank')" title="Abrir Central de Ajuda">
+                ?
+            </button>
+            <div class="help-tooltip">Central de Ajuda</div>
         </header>
 
         <!-- Upload Section -->

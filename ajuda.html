@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajuda - Sistema de Conferência de Folha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #e7f3ff;
+            border-color: #2196F3;
+            color: #0d47a1;
+        }
+
+        .alert-warning {
+            background: #fff4e5;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #1b5e20;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        ul, ol {
+            margin: 10px 0 10px 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .visual-box {
+            border: 2px dashed #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #f8f9ff;
+            font-family: monospace;
+            white-space: pre-line;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-back:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #667eea;
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        .faq-item {
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #f8f9fa;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🆘 Central de Ajuda</h1>
+            <p>Sistema de Conferência de Folha de Pagamento</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('inicio')">⚡ Início Rápido</button>
+            <button class="nav-tab" onclick="showTab('interface')">🖥️ Interface</button>
+            <button class="nav-tab" onclick="showTab('uso')">📖 Como Usar</button>
+            <button class="nav-tab" onclick="showTab('faq')">❓ FAQ</button>
+            <button class="nav-tab" onclick="showTab('problemas')">🔧 Problemas</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB: Início Rápido -->
+            <div id="inicio" class="tab-content active">
+                <div class="section">
+                    <h2>⚡ Início Rápido em 3 Passos</h2>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <strong>Iniciar o Servidor</strong>
+                        <div class="code">python server.py</div>
+                        <div class="alert alert-success">
+                            <span class="icon">✅</span>
+                            Aguarde ver: <code>🌐 Servidor: http://localhost:5001</code>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <strong>Abrir a Interface</strong>
+                        <p>Abra o arquivo <code>index_v2.html</code> no seu navegador</p>
+                    </div>
+
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <strong>Fazer Upload</strong>
+                        <ul>
+                            <li>Arraste seu arquivo <code>.xlsx</code> para a área de upload</li>
+                            <li>OU clique em "📂 Selecionar Arquivo Excel"</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <span class="icon">💡</span>
+                        <strong>Pronto!</strong> Agora você pode selecionar funcionários e visualizar seus dados.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📋 Checklist Antes de Começar</h2>
+                    <ul class="checklist">
+                        <li>Python 3.11+ instalado</li>
+                        <li>Dependências instaladas (Flask, Pandas, openpyxl)</li>
+                        <li>Servidor rodando (<code>python server.py</code>)</li>
+                        <li>Arquivo no formato .xlsx</li>
+                        <li>Navegador moderno (Chrome recomendado)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB: Interface -->
+            <div id="interface" class="tab-content">
+                <div class="section">
+                    <h2>🖥️ Entendendo a Interface</h2>
+                    
+                    <h3>Layout Geral</h3>
+                    <div class="visual-box">╔═══════════════════════════════════════════════════════╗
+║  SISTEMA DE CONFERÊNCIA DE FOLHA                  ║
+║  ┌────────────────────────────────────┐             ║
+║  │ 📂 Selecionar Arquivo Excel        │             ║
+║  └────────────────────────────────────┘             ║
+╠═══════════════════════════════════════════════════════╣
+║  🏢 Empresa: EMBOL MAIS LTDA                        ║
+║  📋 CNPJ: 26.297.716/0001-96                        ║
+║  📅 Período: 10/2025 até 11/2025                    ║
+╠════════════╦══════════════════════════════════════════╣
+║FUNCIONÁRIOS║  DETALHES DO FUNCIONÁRIO                 ║
+║            ║                                          ║
+║ 7 - ALEX   ║  [Tabela de eventos]                     ║
+║            ║                                          ║
+║ 44 - ALINE ║                                          ║
+║            ║                                          ║
+╚════════════╩══════════════════════════════════════════╝</div>
+
+                    <h3>Áreas Principais</h3>
+                    
+                    <table class="table">
+                        <tr>
+                            <th>Área</th>
+                            <th>Função</th>
+                            <th>Como Usar</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Upload</strong></td>
+                            <td>Enviar arquivo Excel</td>
+                            <td>Clique ou arraste arquivo .xlsx</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cabeçalho</strong></td>
+                            <td>Informações da empresa</td>
+                            <td>Aparece automaticamente após upload</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sidebar</strong></td>
+                            <td>Lista de funcionários</td>
+                            <td>Clique no nome para ver detalhes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Área Principal</strong></td>
+                            <td>Tabela de eventos</td>
+                            <td>Scroll horizontal para ver todas colunas</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h3>Lendo a Tabela de Dados</h3>
+                    
+                    <div class="visual-box">Evento                    | 10/2025          | 11/2025
+1 - HORAS NORMAIS        | 4077.32 / 220.00 | 4100.00 / 220.00
+                                ↑        ↑
+                          Calculado  Informado</div>
+
+                    <div class="alert alert-info">
+                        <span class="icon">💡</span>
+                        <strong>Primeiro valor:</strong> Calculado pelo sistema<br>
+                        <strong>Segundo valor:</strong> Informado/Real
+                    </div>
+
+                    <div class="alert alert-success">
+                        <span class="icon">✅</span>
+                        <strong>Valores iguais</strong> (626.63 / 626.63) → Tudo certo!
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <span class="icon">⚠️</span>
+                        <strong>Valores diferentes</strong> (92.83 / 4.00) → Verificar!
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Como Usar -->
+            <div id="uso" class="tab-content">
+                <div class="section">
+                    <h2>📖 Guia de Uso Completo</h2>
+                    
+                    <h3>1. Preparar o Ambiente</h3>
+                    <div class="code"># Ativar ambiente virtual
+source .venv/bin/activate  # Mac/Linux
+.venv\Scripts\activate     # Windows
+
+# Verificar instalação
+python --version           # Deve ser 3.11+
+pip list                   # Ver pacotes instalados</div>
+
+                    <h3>2. Iniciar o Servidor</h3>
+                    <div class="code">python server.py</div>
+                    
+                    <div class="alert alert-warning">
+                        <span class="icon">⚠️</span>
+                        <strong>Atenção:</strong> Mantenha esta janela do terminal aberta enquanto usar o sistema!
+                    </div>
+
+                    <h3>3. Upload de Arquivo</h3>
+                    <p><strong>Método 1 - Arrastar e Soltar:</strong></p>
+                    <ol>
+                        <li>Localize seu arquivo .xlsx no explorador</li>
+                        <li>Arraste sobre a área de upload</li>
+                        <li>Solte o arquivo</li>
+                    </ol>
+
+                    <p><strong>Método 2 - Selecionar:</strong></p>
+                    <ol>
+                        <li>Clique em "📂 Selecionar Arquivo Excel"</li>
+                        <li>Navegue até seu arquivo</li>
+                        <li>Clique em "Abrir"</li>
+                    </ol>
+
+                    <h3>4. Visualizar Dados</h3>
+                    <ol>
+                        <li>Após o upload, veja as informações da empresa no topo</li>
+                        <li>Na barra lateral, aparecerão os funcionários</li>
+                        <li>Clique em um funcionário para ver seus dados</li>
+                        <li>Use scroll horizontal para ver todas as colunas</li>
+                    </ol>
+
+                    <h3>5. Analisar Resultados</h3>
+                    <ul>
+                        <li><strong>Compare valores:</strong> Calculado vs Informado</li>
+                        <li><strong>Identifique diferenças:</strong> Valores que não batem</li>
+                        <li><strong>Verifique períodos:</strong> Compare múltiplas competências</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>📊 Formato do Arquivo</h2>
+                    
+                    <h3>Estrutura Esperada</h3>
+                    <table class="table">
+                        <tr>
+                            <th>Linha</th>
+                            <th>Conteúdo</th>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>Empresa: [nome]</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>CNPJ: [número]</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Competência: [período]</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Cabeçalhos das colunas</td>
+                        </tr>
+                        <tr>
+                            <td>8+</td>
+                            <td>Dados dos funcionários</td>
+                        </tr>
+                    </table>
+
+                    <h3>Colunas Detectadas</h3>
+                    <table class="table">
+                        <tr>
+                            <th>Posição</th>
+                            <th>Nome</th>
+                            <th>Exemplo</th>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>Código</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Descrição</td>
+                            <td>HORAS NORMAIS</td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td>Referência</td>
+                            <td>10/2025</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>Valor Calculado</td>
+                            <td>4.077,32</td>
+                        </tr>
+                        <tr>
+                            <td>23</td>
+                            <td>Valor Informado</td>
+                            <td>220:00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: FAQ -->
+            <div id="faq" class="tab-content">
+                <div class="section">
+                    <h2>❓ Perguntas Frequentes</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ O sistema funciona offline?
+                        </div>
+                        <div class="faq-answer">
+                            <p><strong>Não completamente.</strong> Você precisa:</p>
+                            <ul>
+                                <li>✅ Ter Python instalado</li>
+                                <li>✅ Executar o servidor local</li>
+                                <li>✅ Mas não precisa de internet para processar arquivos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ Os dados ficam salvos?
+                        </div>
+                        <div class="faq-answer">
+                            <p><strong>Não.</strong> O sistema:</p>
+                            <ul>
+                                <li>❌ Não salva arquivos no servidor</li>
+                                <li>❌ Não armazena dados em banco</li>
+                                <li>✅ Processa tudo na memória</li>
+                                <li>✅ Garante privacidade total</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ Por que alguns funcionários não aparecem?
+                        </div>
+                        <div class="faq-answer">
+                            <p>O sistema filtra automaticamente:</p>
+                            <ul>
+                                <li>❌ Nomes com: LTDA, ME, EPP, EIRELI, S.A, CIA</li>
+                                <li>❌ Linhas sem padrão NÚMERO - NOME</li>
+                            </ul>
+                            <p><strong>Motivo:</strong> Evitar que empresas apareçam como funcionários.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ O que são funcionários duplicados?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Quando há quebra de página, o mesmo funcionário pode aparecer várias vezes. O sistema:</p>
+                            <ul>
+                                <li>🔍 Detecta pelo código (número)</li>
+                                <li>🔄 Consolida todos os eventos</li>
+                                <li>✅ Mostra apenas uma vez</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ Posso exportar os dados?
+                        </div>
+                        <div class="faq-answer">
+                            <p><strong>Atualmente não.</strong> Alternativas:</p>
+                            <ul>
+                                <li>📸 Fazer screenshots</li>
+                                <li>📋 Copiar dados manualmente</li>
+                                <li>🖨️ Imprimir a página (Ctrl+P)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ Funciona com .xls (Excel antigo)?
+                        </div>
+                        <div class="faq-answer">
+                            <p><strong>Não.</strong> Apenas .xlsx. Para converter:</p>
+                            <ol>
+                                <li>Abra o .xls no Excel</li>
+                                <li>Clique em "Salvar Como"</li>
+                                <li>Escolha formato "Excel Workbook (.xlsx)"</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            ▶ Como faço backup dos dados?
+                        </div>
+                        <div class="faq-answer">
+                            <p>Como o sistema não salva, a melhor opção é:</p>
+                            <ul>
+                                <li>💾 Manter arquivos Excel originais seguros</li>
+                                <li>📂 Organizar por data/período</li>
+                                <li>☁️ Usar serviços de nuvem</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Problemas -->
+            <div id="problemas" class="tab-content">
+                <div class="section">
+                    <h2>🔧 Solução de Problemas</h2>
+                    
+                    <h3>❌ "Servidor não está rodando"</h3>
+                    <div class="alert alert-danger">
+                        <strong>Sintomas:</strong>
+                        <ul>
+                            <li>Upload não funciona</li>
+                            <li>Erro no console do navegador</li>
+                            <li>Nada acontece ao selecionar arquivo</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Solução:</strong>
+                        <ol>
+                            <li>Verifique o terminal</li>
+                            <li>Procure: <code>🌐 Servidor: http://localhost:5001</code></li>
+                            <li>Se não estiver, execute: <code>python server.py</code></li>
+                            <li>Recarregue a página (F5)</li>
+                        </ol>
+                    </div>
+
+                    <h3>❌ "Lista de funcionários vazia"</h3>
+                    <div class="alert alert-danger">
+                        <strong>Possíveis Causas:</strong>
+                    </div>
+                    
+                    <p><strong>Causa 1: Formato incorreto</strong></p>
+                    <div class="code">❌ Errado: ALEX BARBOZA
+❌ Errado: 7 ALEX BARBOZA
+✅ Certo:  7 - ALEX BARBOZA</div>
+
+                    <p><strong>Causa 2: Todos são empresas</strong></p>
+                    <ul>
+                        <li>Nomes com LTDA, ME, EPP são filtrados</li>
+                        <li>Isso é intencional!</li>
+                    </ul>
+
+                    <p><strong>Causa 3: Arquivo diferente</strong></p>
+                    <ul>
+                        <li>Verifique se segue o formato esperado</li>
+                        <li>Confira estrutura das primeiras linhas</li>
+                    </ul>
+
+                    <h3>❌ "Valores aparecem estranhos"</h3>
+                    <div class="alert alert-warning">
+                        <strong>Verifique o formato:</strong>
+                    </div>
+                    
+                    <p><strong>Valores monetários:</strong></p>
+                    <div class="code">✅ Correto: 4.077,32 (ponto = milhar, vírgula = decimal)
+❌ Errado:  4,077.32</div>
+
+                    <p><strong>Horas:</strong></p>
+                    <div class="code">✅ Correto: 220:30 (formato HH:MM)
+❌ Errado:  Formato "Hora" do Excel</div>
+
+                    <p><strong>Dica:</strong> Use formato "Texto" ou "Geral" nas células do Excel</p>
+
+                    <h3>❌ "Erro ao instalar dependências"</h3>
+                    <div class="code"># 1. Ative o ambiente virtual
+source .venv/bin/activate  # Mac/Linux
+
+# 2. Atualize o pip
+python -m pip install --upgrade pip
+
+# 3. Instale novamente
+pip install flask pandas openpyxl flask-cors</div>
+
+                    <h3>❌ "Sistema lento ou trava"</h3>
+                    <div class="alert alert-info">
+                        <strong>Soluções:</strong>
+                        <ul>
+                            <li>✂️ Divida arquivos muito grandes</li>
+                            <li>🔄 Feche outras abas do navegador</li>
+                            <li>💻 Use Google Chrome</li>
+                            <li>🧹 Limpe cache do navegador</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📞 Precisa de Mais Ajuda?</h2>
+                    <div class="alert alert-info">
+                        <p><strong>📚 Documentação Completa:</strong></p>
+                        <p>Consulte o arquivo <code>DOCUMENTACAO.md</code> para informações detalhadas</p>
+                        
+                        <p><strong>🐛 Reportar Bug:</strong></p>
+                        <p>Abra uma issue no GitHub: <a href="https://github.com/crislouzada/system_folhaconferencia/issues" target="_blank">github.com/crislouzada/system_folhaconferencia</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="index_v2.html" class="btn-back">← Voltar ao Sistema</a>
+        </div>
+
+        <div class="footer">
+            <p><strong>Sistema de Conferência de Folha de Pagamento v3.0</strong></p>
+            <p>Desenvolvido por Cristiano Louzada • Dezembro 2025</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Ocultar todas as tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Desativar todos os botões
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Ativar tab selecionada
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Fechar todas as FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-question').innerHTML = 
+                    item.querySelector('.faq-question').innerHTML.replace('▼', '▶');
+            });
+            
+            // Abrir/fechar a FAQ clicada
+            if (!isActive) {
+                faqItem.classList.add('active');
+                element.innerHTML = element.innerHTML.replace('▶', '▼');
+            }
+        }
+    </script>
+</body>
+</html>
