@@ -393,12 +393,13 @@ def structure_payroll_data(raw_data: List[List[str]]) -> Dict[str, Any]:
             all_references.add(reference)
             current_employee['references'].add(reference)
             
-            # Chave única do evento (código + descrição)
-            event_key = f"{code}|||{description}"
+            # Chave única do evento (código + descrição + tipo)
+            tipo_flag = str(tipo_raw).strip().upper()[:1] if tipo_raw is not None else ''
+            event_key = f"{code}|||{description}|||{tipo_flag}"
             
             # Criar estrutura se não existe
             if event_key not in current_employee['events_map']:
-                current_employee['events_map'][event_key] = {}
+                current_employee['events_map'][event_key] = {'tipo': tipo_flag}
             
             # Armazenar valores por referência
             current_employee['events_map'][event_key][reference] = {
@@ -491,19 +492,23 @@ def convert_to_transposed_structure(events_map: Dict, references: List[str]) -> 
     events = []
     
     for event_key, ref_values in events_map.items():
-        code, description = event_key.split('|||')
+        parts = event_key.split('|||')
+        code = parts[0]
+        description = parts[1]
+        tipo = parts[2] if len(parts) > 2 else ''
         
         event = {
             'code': code,
             'description': description,
+            'tipo': tipo,
             'values': {}
         }
         
-        # Para cada referência, adicionar valores
+        # Para cada referência, adicionar valores (filtra 'tipo' se presente)
         for ref in references:
             if ref in ref_values:
                 event['values'][ref] = ref_values[ref]
-            else:
+            elif ref != 'tipo':
                 event['values'][ref] = {
                     'calculated': 0.0,
                     'informed': 0.0,
@@ -512,8 +517,19 @@ def convert_to_transposed_structure(events_map: Dict, references: List[str]) -> 
         
         events.append(event)
     
-    # Ordenar por código numérico
-    events.sort(key=lambda e: int(e['code']) if e['code'].isdigit() else 9999)
+    # Ordenar: P primeiro, D segundo, demais depois; dentro de cada grupo, por código
+    def sort_key(e):
+        tipo = e.get('tipo', '').upper()
+        if tipo == 'P':
+            order = 0
+        elif tipo == 'D':
+            order = 1
+        else:
+            order = 2
+        code_num = int(e['code']) if e['code'].isdigit() else 9999
+        return (order, code_num)
+    
+    events.sort(key=sort_key)
     
     return events
 
