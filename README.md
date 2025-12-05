@@ -60,9 +60,13 @@ docker-compose down
 ### Acessar a Aplicação
 
 Após iniciar o Docker:
-1. **Backend**: http://localhost:5001 (automático)
-2. **Interface**: Abra `index_v2.html` no navegador
-3. **Ajuda**: Clique no botão **?** ou abra `ajuda.html`
+1. **Interface (mesmo computador)**: http://localhost:5001
+2. **Interface (outro computador na rede)**: http://SEU_IP:5001
+3. **Ajuda**: http://localhost:5001/ajuda.html
+4. **Health**: http://localhost:5001/health
+
+Observação: a interface é servida pelo Flask e o frontend usa `window.location.origin`.
+Ao acessar de outro computador, a página chama a API no mesmo host/porta automaticamente.
 
 📖 Consulte [DOCKER.md](DOCKER.md) para instruções detalhadas
 
@@ -90,7 +94,7 @@ pip install flask pandas openpyxl flask-cors
 python server.py
 ```
 
-2. Abra o arquivo `index_v2.html` no navegador
+2. Abra o endereço `http://localhost:5001` no navegador
 
 3. Faça upload do arquivo XLSX de folha de pagamento
 
@@ -124,7 +128,7 @@ pip install -r requirements.txt
 python server.py
 ```
 
-5. Abra `index_v2.html` no navegador
+5. Abra `http://localhost:5001` no navegador
 
 ## 📊 Formato do Arquivo
 

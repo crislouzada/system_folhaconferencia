@@ -43,9 +43,13 @@ docker-compose restart
 ## Acessar Aplicação
 
 Após iniciar:
-1. **Backend**: http://localhost:5001
-2. **Interface**: Abra `index_v2.html` no navegador
-3. **Ajuda**: Clique no botão **?** ou abra `ajuda.html`
+1. **Interface (mesmo host)**: http://localhost:5001
+2. **Interface (outro computador)**: http://SEU_IP:5001
+3. **Ajuda**: http://localhost:5001/ajuda.html
+4. **Health**: http://localhost:5001/health
+
+Observação: o frontend usa o mesmo host da página (`window.location.origin`).
+Se acessar de outro PC, a página chamará a API no mesmo host/porta automaticamente.
 
 ## Verificar Status
 
