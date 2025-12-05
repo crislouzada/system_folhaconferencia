@@ -15,7 +15,7 @@ VERSÃO: 3.0 - Payroll Processing Engine
 ═══════════════════════════════════════════════════════════════════════════════
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import pandas as pd
@@ -546,6 +546,30 @@ def calculate_global_summary(employees: List[Dict], references: List[str]) -> Di
 # ═══════════════════════════════════════════════════════════════════════════
 # ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════
+
+@app.route('/')
+def index():
+    """Serve a página principal"""
+    return send_from_directory('.', 'index_v2.html')
+
+
+@app.route('/index_v2.html')
+def index_v2():
+    """Serve a página principal"""
+    return send_from_directory('.', 'index_v2.html')
+
+
+@app.route('/app_v2.js')
+def app_js():
+    """Serve o JavaScript"""
+    return send_from_directory('.', 'app_v2.js')
+
+
+@app.route('/ajuda.html')
+def ajuda():
+    """Serve a página de ajuda"""
+    return send_from_directory('.', 'ajuda.html')
+
 
 @app.route('/health', methods=['GET'])
 def health_check():

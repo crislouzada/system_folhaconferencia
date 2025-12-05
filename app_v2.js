@@ -28,6 +28,8 @@ const AppState = {
 // INICIALIZAÇÃO
 // ═══════════════════════════════════════════════════════════════════════════
 
+const API_BASE_URL = window.location.origin;
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Sistema de Conferência de Folha V2.0 inicializado');
     
@@ -78,12 +80,12 @@ function setupEventListeners() {
  */
 async function checkPythonServer() {
     try {
-        const response = await fetch('http://localhost:5001/health');
+        const response = await fetch(`${API_BASE_URL}/health`);
         if (response.ok) {
             console.log('✅ Servidor Python está rodando');
         }
     } catch (e) {
-        console.warn('⚠️ Servidor Python não detectado. Inicie com: python3 server.py');
+        console.warn('⚠️ Servidor Python não detectado. Verifique o container Docker.');
     }
 }
 
@@ -136,7 +138,7 @@ async function handleFileUpload(file) {
         const formData = new FormData();
         formData.append('file', file);
         
-        const response = await fetch('http://localhost:5001/parse-excel', {
+        const response = await fetch(`${API_BASE_URL}/parse-excel`, {
             method: 'POST',
             body: formData
         });
