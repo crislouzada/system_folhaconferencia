@@ -31,3 +31,6 @@ Movimentos.*
 
 # Logs
 *.log
+
+# Docker
+uploads/

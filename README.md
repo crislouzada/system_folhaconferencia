@@ -12,15 +12,59 @@ Sistema web para análise e comparação de folhas de pagamento a partir de arqu
 - **Visualização transposta** com eventos em linhas e referências em colunas
 - **Comparação** de valores calculados vs informados
 - **Interface moderna** com sidebar e tabelas responsivas
+- **Central de ajuda** interativa integrada
 
 ## 📋 Requisitos
 
+### Opção 1: Docker (Recomendado)
+- Docker instalado
+- Docker Compose (opcional, mas recomendado)
+
+### Opção 2: Instalação Local
 - Python 3.11+
 - Flask 3.1.0
-- Pandas 2.3.3
+- Pandas 2.2.3
 - openpyxl 3.1.5
 
-## 🔧 Instalação
+## 🐳 Instalação e Uso com Docker (Recomendado)
+
+### Início Rápido
+
+```bash
+# Executar script automático
+./start.sh
+```
+
+O script irá:
+- ✅ Construir a imagem Docker
+- ✅ Iniciar o container
+- ✅ Verificar o health check
+- ✅ Abrir a interface no navegador (macOS)
+
+### Comandos Docker Manuais
+
+```bash
+# Build e iniciar com Docker Compose
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
+
+# OU usar o script
+./stop.sh
+```
+
+### Acessar a Aplicação
+
+Após iniciar o Docker:
+1. **Backend**: http://localhost:5001 (automático)
+2. **Interface**: Abra `index_v2.html` no navegador
+3. **Ajuda**: Clique no botão **?** ou abra `ajuda.html`
+
+📖 Consulte [DOCKER.md](DOCKER.md) para instruções detalhadas
 
 1. Clone o repositório:
 ```bash
@@ -53,6 +97,34 @@ python server.py
 4. Selecione um funcionário na lista lateral
 
 5. Visualize os eventos e compare valores
+
+## 🔧 Instalação Local (Alternativa)
+
+Se preferir rodar sem Docker:
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/crislouzada/system_folhaconferencia.git
+cd system_folhaconferencia
+```
+
+2. Crie um ambiente virtual:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # No Windows: .venv\Scripts\activate
+```
+
+3. Instale as dependências:
+```bash
+pip install -r requirements.txt
+```
+
+4. Inicie o servidor:
+```bash
+python server.py
+```
+
+5. Abra `index_v2.html` no navegador
 
 ## 📊 Formato do Arquivo
 
