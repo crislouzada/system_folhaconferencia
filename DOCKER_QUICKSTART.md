@@ -4,6 +4,7 @@
 
 ```bash
 ./start.sh
+./publish.sh   # publica e mostra os links (local/externo)
 ```
 
 Este script:
@@ -52,6 +53,17 @@ Observação: o frontend usa o mesmo host da página (`window.location.origin`).
 Se acessar de outro PC, a página chamará a API no mesmo host/porta automaticamente.
 
 ## Verificar Status
+## Publicar rapidamente
+
+```bash
+./publish.sh
+```
+
+O script:
+- Para instâncias antigas
+- Faz build e sobe o container
+- Aguarda o health check
+- Imprime os links `http://localhost:5001` e `http://SEU_IP:5001`
 
 ```bash
 # Health check
