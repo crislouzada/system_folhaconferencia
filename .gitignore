@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Arquivos de dados sensíveis
+*.xls
+*.xlsx
+*.csv
+Movimentos.*
+
+# Backups
+*_backup.py
+*_v2_*.py
+*_v3_*.py
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
